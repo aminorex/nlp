@@ -1,0 +1,23 @@
+#! /usr/bin/env bash
+
+dirs=''
+args=''
+
+for arg in $*; do
+  if [ -d $arg ]; then
+    dirs="$dirs $arg"
+  else
+    args="$args $arg"
+  fi
+done
+
+if [ -n "$dirs" ]; then
+  dirs=.
+fi
+
+cmd="find $dirs -name .svn -prune -o -type f -name \*.[hc]* | xargs grep $args"
+cmd="$cmd | grep -v BAEL | grep -v ':#' | grep -v ': *//'"
+echo $cmd
+eval $cmd
+
+

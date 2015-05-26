@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+waiting=true
+
+while $waiting; do
+
+  nfound=0
+  for pid in $@; do
+    ps -p $pid >/dev/null 2>&1 
+    status=$?
+    if [ $status -eq 0 ]; then
+      nfound=$((nfound + 1))
+    fi
+  done
+  if [ $nfound -gt 0 ]; then
+    sleep 5
+  else
+    waiting=false
+  fi
+
+done
+
+exit 0

@@ -1,0 +1,113 @@
+#! /usr/bin/env bash
+
+set -e 
+
+script=$0
+opts=""
+exprs="akimbal1"
+hosts=""
+header=true
+verbose=${VERBOSE:-false}
+test -z "$verbose" && verbose=false
+test $verbose != false -a $verbose != true && verbose=true
+
+nx=false
+for arg in $@; do
+  $nx && opts="$arg" && nx=false && continue  
+
+  case $arg in
+  n[yj]*dev[0-9]*)
+    hosts="$hosts $arg"
+    ;;
+  -nh)
+    header=false
+    ;;
+  nohead*)
+    header=false
+    ;;
+  all)
+    exprs=""
+    ;;
+  -o)
+    nx=true
+    ;;
+  -all)
+    exprs=""
+    ;;
+  -v)
+    verbose=true
+    ;;
+  -*)
+    opts="$opts $arg"
+    ;;
+  *)
+    exprs="$exprs $arg"
+    ;;
+  esac
+done
+
+test -z "$hosts" && hosts=${HOSTS}
+test -z "$hosts" && hosts=${NSNLTDEV}
+test -z "$hosts" && hosts=${DEVHOSTS}
+test -z "$opts" && opts="-ef"
+
+rps() {
+  local verbose=$1
+  shift
+  local host=$1
+  shift
+
+  $verbose && echo "ssh -n -x $host /bin/ps $@" 1>&2
+  eval "ssh -n -x $host /bin/ps $@ | grep -v $script "
+  return $?
+}
+
+filter_rps() {
+  local verbose=$1
+  shift
+  local header=$1
+  shift
+  local host=$1
+  shift
+  local opts=$1
+  shift
+  local nin=0
+  local nout=0
+  local head=''
+  local hit=''
+  local line=''
+  local cmd='cat'
+
+  for expr in $@; do
+    cmd="$cmd | grep \"$expr\""
+  done
+
+  rps $verbose $host $opts | while read line; do
+    nin=$((nin + 1))
+    # $verbose && echo line $nin header=$header 1>&2
+    if $header; then
+      head=$line
+      header=false
+      continue
+    fi
+    hit=$(echo "$line" | eval "$cmd" 2>/dev/null || true)
+    if [ ! -z "$hit" ]; then
+      if [ ! -z "$head" ]; then
+        echo "HOSTNAME:	$head"
+        head=''
+      fi
+      echo $host: $line
+    fi
+  done
+  true
+  return $?
+}
+
+$verbose && echo hosts=$hosts exprs="$exprs" 1>&2
+fv=$verbose
+for h in $hosts; do
+  $verbose && echo host=$h header=$header 1>&2
+  filter_rps $fv $header "$h" "$opts" "$exprs"
+  header=false
+done
+

@@ -1,0 +1,26 @@
+#! /usr/bin/env bash
+
+# 
+# script to verbosely execute a command
+#
+
+verbosely() {
+  start_stamp=$(date +%s.%N)
+  cmd=$1
+  shift
+  while [ "$1" != "" ]; do
+    cmd="$cmd $1"
+    shift
+  done
+  echo -n eval \"$cmd\" 1>&2
+  eval "$cmd"
+  status=$?
+  end_stamp=$(date +%s.%N)
+  seconds=$(echo $end_stamp $start_stamp - p | dc)
+  echo '' returns $status in $seconds sec. 1>&2
+  return $status
+}
+
+
+
+

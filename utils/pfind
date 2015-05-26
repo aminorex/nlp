@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+
+if [ "$1" -eq "-n" ]; then
+  number=true
+  shift
+else
+  number=false
+fi
+
+for pat in $@; do
+  ps -auxww | eval "grep $pat" | grep -v pfind | grep -v "grep $pat"
+done

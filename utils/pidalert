@@ -1,0 +1,104 @@
+#! /usr/bin/env bash
+
+pids=()
+msg=""
+child=false
+any=false
+rcpt=akimball2@bloomberg.net
+nsleep=15
+
+for arg in $@; do
+  case $arg in
+  *@*)
+    rcpt="$rcpt $arg"
+    ;;
+  *[jo][un][sl][ty])
+    rcpt=""
+    ;;
+  -[jo])
+    rcpt=""
+    ;;
+  *any)
+    any=true
+    ;;
+  *all)
+    any=false
+    ;;
+  *child)
+    child=true
+    ;;
+  [1-9][0-9]*)
+    ps -fp $arg >/dev/null
+    if [ $? -eq 0 ]; then
+      pids[${#pids[*]}]=$arg
+    else
+      nsleep=$arg
+    fi
+    ;;
+  *)
+    msg="$msg $arg"
+    ;;
+  esac
+done
+
+status=1
+if $child; then
+
+  npids=${#pids[*]}
+  wpids="${pids[*]}"
+  dpids=""
+
+  while [ $npids -gt 0 -a ! -z "$wpids" ]; do
+    ndrop=0
+    lpids=""
+
+    for pid in ${pids[*]}; do
+      ps -fp $pid >/dev/null
+      pstatus=$?
+      if [ $pstatus -ne 0 ]; then
+        dpids="$dpids $pid"
+        ndrop=$((ndrop + 1))
+      else
+        lpids="$lpids $pid"
+      fi
+    done
+
+    npids=$((npids - ndrop))
+    wpids="$lpids"
+    $any && test $ndrop -gt 0 && break
+
+    if [ $nsleep -gt 0 ]; then
+      sleep $nsleep
+    fi
+  done    
+
+  for r in $rcpt; do
+    echo $0 $any ${pids[*]} finished $dpids on host $(hostname) "\"$msg\"" | mail $r
+  done
+  status=0
+
+else
+
+  if [ ${#pids[*]} -eq 0 ]; then
+    echo $0: pid arguments required 1>&2
+    exit 1
+  fi
+
+  if [ -z "$rcpt" ]; then
+    echo $0: specify recipient 1>&2
+  fi
+
+  eval "$0 child $@ </dev/null 1>/dev/null 2>/dev/null" &
+  fstatus=$?
+  pid=$!
+
+  ps -fp $pid >/dev/null
+  status=$?
+  if [ $status -ne 0 ]; then
+    echo $0: failed on fork $fstatus pid $$ child $pid 1>&2
+  fi
+
+fi
+
+exit $status
+

@@ -1,0 +1,2 @@
+#! /usr/bin/env bash
+sed -e s,'|[-A-Za-z_]*',,g -e s,' *__[a-z]*__ *',,g | tr '\a' ' '

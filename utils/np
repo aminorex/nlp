@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+p=$(type -p parallel)
+echo "$p --nice 19 $@" 1>&2
+eval "$p --nice 19 $@"

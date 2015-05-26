@@ -1,0 +1,52 @@
+#! /usr/bin/env bash
+
+xbit=false
+gbit=false
+ro=false
+
+script="$0"
+
+fail() {
+  local target="$1"
+  if [ -f $target ]; then
+    rm -f $target
+    shift
+  fi
+  echo "$script: $@" 1>&2
+  exit 1
+}
+
+args=""
+for arg in $@; do
+  case "$arg" in
+  -x) 
+    xbit=true
+    ;;
+  -g)
+    gbit=true
+    ;;
+  -p)
+    xbit=true
+    gbit=true
+    ;;
+  -r)
+    ro=true
+    ;;
+  *)
+    args="$args $arg"
+    ;;
+  esac
+done
+
+for arg in $args; do
+  mv -f $arg $arg.tmp$$ || fail $arg.tmp$$ Unable to rename $arg
+  cp -f $arg.tmp$$ $arg
+  status=$?
+  if [ $status -ne 0 ]; then
+    mv -f $arg.tmp$$ $arg
+    fail '' Unable to copy back $arg
+  fi
+  $xbit && chmod ugo+x $arg
+  $gbit && chmod ug+w $arg
+  $ro && chmod ugo-w $arg
+done

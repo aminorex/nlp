@@ -1,0 +1,52 @@
+#! /usr/bin/env bash
+
+ndir=0
+dirs=()
+for arg in $@; do
+  dirs[$ndir]="$arg"
+  ndir=$((ndir + 1))
+done
+
+if [ $ndir -lt 1 -o $ndir -gt 2 ]; then
+  echo $0: Usage: $0 [thisdir] thatdir 1>&2
+  exit 1
+elif [ $ndir -eq 1 ]; then
+  thisdir=.
+  thatdir=${dirs[0]}
+else
+  thisdir=${dirs[0]}
+  thatdir=${dirs[1]}
+fi
+
+if [ ! -d $thisdir -o ! -d $thatdir ]; then
+  echo $0: Unable to open one of $thisdir, $thatdir 1>&2
+  exit 2
+fi
+
+list=''
+for f in *.cpp; do 
+  if [ $f != "*.cpp" ]; then
+    list="$list $f"
+  fi
+done
+for f in *.h; do 
+  if [ $f != "*.cpp" ]; then
+    list="$list $f"
+  fi
+done
+
+status=0
+for f in $list; do
+  echo %%% $f
+  diff $thisdir/$f $thatdir/$f
+  dstat=$?
+  if [ $dstat -ne 0 ]; then
+    status=$((status + 1))
+  fi
+done
+
+if [ $status -gt 0 ]; then
+  echo $0 $thisdir $thatdir found $status files with differences 1>&2
+fi
+
+exit $status
