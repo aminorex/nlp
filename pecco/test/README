@@ -1,0 +1,18 @@
+This directory includes the data set used in the following paper:
+
+N. Yoshinaga and M. Kitsuregawa. Polynomial to Linear: Efficient
+Classification with Conjunctive Features. Proc. EMNLP. 
+pp. 1542--1551. 2009.
+
+linear_m*: models trained with log linear model
+kernel_m*: models trained with support vector machines
+tl.train, tl.dev: training and test examples for the models
+                  (tl.dev is not used in the paper)
+
+You can try something like:
+> pecco -t 0 -f tl.train -v 1 linear_m2 tl.dev
+> pecco -t 1 -r 0.1 -e tl.train -f tl.train -v 1 kernel_m3 tl.dev
+
+The identity of fstrie is given by the event filename [-f].
+Remember to 'make clean' in building fstrie with a new model.
+

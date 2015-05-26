@@ -1,0 +1,58 @@
+> make
+> cd lua (or pthon, ruby, perl)
+
+# optional for testing
+> ln -s ../../test/tl.{train,dev} ../../test/kernel_m1 .
+
+### python
+
+build
+> python setup.py install --record installed
+
+test
+> run python test.py -t 0 -e tl.train kernel_m1 tl.dev -v 1
+
+cleanup
+> rm -rf build src pecco.pyc
+> make -f ../../test/Makefile clean
+
+uninstall
+> find installed | xargs rm -f
+
+### ruby
+
+build
+> ruby extconf.rb
+> make site-install
+
+test
+> run ruby test.rb -t 0 -e tl.train kernel_m1 tl.dev -v 1
+
+cleanup
+> make clean
+> make -f ../../test/Makefile clean
+
+### perl
+
+build
+> perl Makefile.PL
+> make install
+
+test
+> run perl test.pl -t 0 -e tl.train kernel_m1 tl.dev -v 1
+
+cleanup
+> make clean
+> make -f ../../test/Makefile clean
+
+### lua / luajit
+
+build
+> make
+
+test
+> run lua test.lua -t 0 -e tl.train kernel_m1 tl.dev -v 1
+
+cleanup
+> rm -rf pecco_wrap.cxx *.o pecco.so
+> make -f ../../test/Makefile clean
