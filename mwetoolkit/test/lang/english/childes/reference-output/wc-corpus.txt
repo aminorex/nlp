@@ -1,0 +1,3 @@
+400 entities in corpus.xml
+2570 words in corpus.xml
+8587 characters in corpus.xml

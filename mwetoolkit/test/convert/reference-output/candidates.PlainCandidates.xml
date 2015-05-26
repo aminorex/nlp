@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE candidates SYSTEM "dtd/mwetoolkit-candidates.dtd">
+<!-- MWETOOLKIT: filetype="XML" -->
+<candidates >
+<meta>
+</meta>
+<cand candid="1">
+    <ngram><w surface="group" /> <w surface="a" /> </ngram>
+</cand>
+<cand candid="2">
+    <ngram><w surface="rich" /> <w surface="person" /> </ngram>
+</cand>
+<cand candid="3">
+    <ngram><w surface="body" /> <w surface="of" /> <w surface="work" /> </ngram>
+</cand>
+<cand candid="4">
+    <ngram><w surface="prison" /> <w surface="term" /> </ngram>
+</cand>
+<cand candid="5">
+    <ngram><w surface="trade" /> <w surface="good" /> </ngram>
+</cand>
+<cand candid="6">
+    <ngram><w surface="computer" /> <w surface="science" /> </ngram>
+</cand>
+<cand candid="7">
+    <ngram><w surface="snake_case" /> <w surface="variable" /> </ngram>
+</cand>
+<cand candid="8">
+    <ngram><w surface="selective" /> <w surface="information" /> </ngram>
+</cand>
+<cand candid="9">
+    <ngram><w surface="written" /> <w surface="report" /> </ngram>
+</cand>
+<cand candid="10">
+    <ngram><w surface="elbow" /> <w surface="room" /> </ngram>
+</cand>
+<cand candid="11">
+    <ngram><w surface="hashtag" /> <w surface="#fail" /> </ngram>
+</cand>
+<cand candid="12">
+    <ngram><w surface="inspection" /> <w surface="and" /> <w surface="repair" /> </ngram>
+</cand>
+<cand candid="13">
+    <ngram><w surface="service" /> <w surface="of" /> <w surface="process" /> </ngram>
+</cand>
+<cand candid="14">
+    <ngram><w surface="armed" /> <w surface="service" /> </ngram>
+</cand>
+<cand candid="15">
+    <ngram><w surface="military" /> <w surface="service" /> </ngram>
+</cand>
+<cand candid="16">
+    <ngram><w surface="divine" /> <w surface="service" /> </ngram>
+</cand>
+<cand candid="17">
+    <ngram><w surface="religious" /> <w surface="service" /> </ngram>
+</cand>
+<cand candid="18">
+    <ngram><w surface="first" /> <w surface="gear" /> </ngram>
+</cand>
+<cand candid="19">
+    <ngram><w surface="low" /> <w surface="gear" /> </ngram>
+</cand>
+<cand candid="20">
+    <ngram><w surface="business" /> <w surface="enterprise" /> </ngram>
+</cand>
+<cand candid="21">
+    <ngram><w surface="right" /> <w surface="field" /> </ngram>
+</cand>
+<cand candid="22">
+    <ngram><w surface="blank" /> <w surface="space" /> </ngram>
+</cand>
+<cand candid="23">
+    <ngram><w surface="record" /> <w surface="book" /> </ngram>
+</cand>
+<cand candid="24">
+    <ngram><w surface="guinea" /> <w surface="pig" /> </ngram>
+</cand>
+<cand candid="25">
+    <ngram><w surface="book" /> <w surface="binding" /> </ngram>
+</cand>
+<cand candid="26">
+    <ngram><w surface="chemical" /> <w surface="group" /> </ngram>
+</cand>
+<cand candid="27">
+    <ngram><w surface="surface" /> <w surface="area" /> </ngram>
+</cand>
+<cand candid="28">
+    <ngram><w surface="line" /> <w surface="of" /> <w surface="work" /> </ngram>
+</cand>
+<cand candid="29">
+    <ngram><w surface="phone" /> <w surface="number" /> </ngram>
+</cand>
+<cand candid="30">
+    <ngram><w surface="telephone" /> <w surface="number" /> </ngram>
+</cand>
+<cand candid="31">
+    <ngram><w surface="monetary" /> <w surface="value" /> </ngram>
+</cand>
+<cand candid="32">
+    <ngram><w surface="facial" /> <w surface="expression" /> </ngram>
+</cand>
+<cand candid="33">
+    <ngram><w surface="theatrical" /> <w surface="role" /> </ngram>
+</cand>
+<cand candid="34">
+    <ngram><w surface="hoi" /> <w surface="polloi" /> </ngram>
+</cand>
+<cand candid="35">
+    <ngram><w surface="the" /> <w surface="great" /> <w surface="unwashed" /> </ngram>
+</cand>
+<cand candid="36">
+    <ngram><w surface="great" /> <w surface="britain" /> </ngram>
+</cand>
+<cand candid="37">
+    <ngram><w surface="course" /> <w surface="of" /> <w surface="instruction" /> </ngram>
+</cand>
+<cand candid="38">
+    <ngram><w surface="course" /> <w surface="of" /> <w surface="study" /> </ngram>
+</cand>
+<cand candid="39">
+    <ngram><w surface="public" /> <w surface="figure" /> </ngram>
+</cand>
+<cand candid="40">
+    <ngram><w surface="stage" /> <w surface="business" /> </ngram>
+</cand>
+<cand candid="41">
+    <ngram><w surface="news" /> <w surface="report" /> </ngram>
+</cand>
+<cand candid="42">
+    <ngram><w surface="write" /> <w surface="up" /> </ngram>
+</cand>
+<cand candid="43">
+    <ngram><w surface="political" /> <w surface="campaign" /> </ngram>
+</cand>
+<cand candid="44">
+    <ngram><w surface="nursing" /> <w surface="home" /> </ngram>
+</cand>
+<cand candid="45">
+    <ngram><w surface="rest" /> <w surface="home" /> </ngram>
+</cand>
+<cand candid="46">
+    <ngram><w surface="insurance" /> <w surface="policy" /> </ngram>
+</cand>
+<cand candid="47">
+    <ngram><w surface="business" /> <w surface="firm" /> </ngram>
+</cand>
+<cand candid="48">
+    <ngram><w surface="government" /> <w surface="issue" /> </ngram>
+</cand>
+<cand candid="49">
+    <ngram><w surface="military" /> <w surface="issue" /> </ngram>
+</cand>
+</candidates>

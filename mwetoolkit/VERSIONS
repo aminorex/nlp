@@ -1,0 +1,108 @@
+
+                  *****************************************
+                  >>>   MULTIWORD EXPRESSIONS TOOLKIT   <<<
+                  >>>     http://mwetoolkit.sf.net      <<<
+                  >>>      mwetoolkit AT gmail.com      <<<
+                  >>>                                   <<<
+                  >>>    mwetoolkit version history     <<<
+                  *****************************************
+
+********************************************************************************
+  VERSION 1.0:
+  Released: April 16, 2015
+  Authors: Carlos Ramisch, Silvio Ricardo Cordeiro, Vitor de Araujo, Sandra 
+  Castellanos
+
+  Improvements over 0.6:
+    a) Full support to many file types - includes full documentation
+    b) Support to compressed file formats (.gz...)
+    c) Included many tests and corrected existing ones
+    d) General bug fixes, refactoring and improvements
+********************************************************************************
+
+********************************************************************************
+  VERSION 0.6:
+  Released: September 19, 2014
+  Authors: Carlos Ramisch, Vitor de Araujo, Silvio Ricardo Cordeiro, Sandra 
+  Castellanos
+
+  Improvements over 0.5:
+    a) New regexp-like functionalities such as negation
+    b) Full support to textual Moses factored format in indexing
+    c) Format conversion scripts for XML, Moses, CoNLL, etc.
+    d) New matching options in candidates.py (overlapping, longest/shortest)
+    e) Token-based MWE identification in annotate_mwe.py
+    f) Remove DTD dependency (no validation)
+    g) General bug fixes, refactoring and improvements
+********************************************************************************
+
+
+********************************************************************************
+  VERSION 0.5:
+  Released: March 09, 2012
+  Author: Carlos Ramisch, Vitor de Araujo
+
+  Improvements over 0.4:
+    a) Regression test suite on several corpora
+    b) LocalMaxs implementation for candidate extraction
+    c) More conversion scripts (including treetagger2xml)
+    d) Fully functional syntactic extraction
+    e) Improved indexation and counting programs
+    f) Up-to-date documentation and help
+********************************************************************************
+
+
+********************************************************************************
+  VERSION 0.4:
+  Released: May 17, 2011
+  Author: Carlos Ramisch, Vitor de Araujo
+
+  Improvements over 0.3:
+    a) Syntax element support
+    b) mweconsole for easier management of intermediary files and script options
+    c) index scripts in C, faster and support bigger copora like the BNC
+    d) added a toy/genia test/quick start guide, at website mwetoolkit.sf.net
+    e) bug correction, documentation
+    f) several other features which I don't recall now
+********************************************************************************
+
+
+********************************************************************************
+  VERSION 0.3:
+  Released: Aug 27, 2010
+  Author: Carlos Ramisch
+
+  Improvements over 0.2:
+    a) better handling of temporary files
+    b) write errors to stderr instead of stdout
+    c) sorting script, map script
+    d) improve filtering script for cropping
+    e) wc, head and tail tools
+    f) suffix array indexing, can handle arbitrary ngrams and very large corpora
+    g) integration with Google API for web counts
+    h) tons of bug correction
+    i) some documentation added
+    j) changed some dtds like the dict dtd and parts of the candidates dtd
+********************************************************************************
+
+
+********************************************************************************
+  VERSION 0.2:
+  Released: Dec 09, 2009
+  Author: Carlos Ramisch
+
+  Improvements over 0.1:
+    a) bug corrections concerning AM features
+    b) unicode partial support (for languages like Greek, Danish, etc)
+    c) yahoo cache naming conventions
+    d) filtering script for occurrence threshold
+********************************************************************************
+
+
+********************************************************************************
+  VERSION 0.1:
+  Released: Nov 9, 2009
+  Author: Carlos Ramisch
+
+  First version
+********************************************************************************

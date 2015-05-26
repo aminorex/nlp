@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dict SYSTEM "dtd/mwetoolkit-patterns.dtd">
+<patterns>
+<pat><w pos="AJ"/><w pos="N"/></pat> <!-- φορητός υπολογιστής-->
+<pat><w pos="N"/><w pos="AJ"/></pat> <!-- ηλίου φαεινότερο, χρόνια πολλά-->
+<pat><w pos="N"/><w pos="N"/></pat> <!-- κράτος μέλος, υπουργείο εσωτερικών-->
+<pat><w pos="N"/><w pos="DT"/><w pos="N"/></pat> <!-- φαινόμενο του θερμοκηπίου-->
+<pat><w pos="N"/><w pos="AJ"/><w pos="N"/></pat> <!-- τεχνολογία υψηλής ευκρίνειας-->
+<pat><w pos="N"/><w pos="P"/><w pos="N"/></pat> <!-- φόνος εκ προμελέτης-->
+<pat><w pos="V"/><w pos="N"/></pat> <!-- βρέχει καρέκλες -->
+<pat><w pos="V"/><w pos="DT"/><w pos="N"/></pat> <!-- τρέχει η βρύση -->
+<pat><w pos="V"/><w pos="P"/><w pos="N"/></pat> <!-- θέτω σε κίνδυνο -->
+<pat><w pos="P"/><w pos="N"/></pat> <!-- επί τάπητος -->
+<pat><w pos="P"/><w pos="AJ"/></pat> <!-- εν ολίγοις -->
+<pat><w pos="P"/><w pos="V"/></pat> <!-- πέρα βρέχει -->
+<pat><w pos="P"/><w pos="DT"/><w pos="AJ"/></pat> <!-- με το καλό -->
+<pat><w pos="P"/><w pos="N"/><w pos="N"/></pat> <!-- κατά φαντασίαν ασθενής -->
+<pat><w pos="P"/><w pos="AJ"/><w pos="N"/></pat> <!-- εν πάση περιπτώσει -->
+<pat><w pos="ADV"/><w pos="V"/></pat> <!-- καλώς όρισες -->
+<!-- <pat><w pos="ADV"/><w pos="CJ"/><w pos="ADV"/></pat> καλώς ή κακώς -->
+<!-- <pat><w pos="CJ"/><w pos="DT"/><w pos="N"/></pat> και του χρόνου -->
+<!-- <pat><w pos="P"/><w pos="N"/><w pos="CJ"/><w pos="P"/><w pos="N"/></pat>  με νύχια και με δόντια -->
+</patterns>

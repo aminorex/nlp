@@ -1,0 +1,28 @@
+----------------------------------------------------------------
+Statistics for reference:
+----------------------------------------------------------------
+Feature: mle_corpus
+MAP      : 24.2339
+# of TPs : 358
+Variance : 18.6387
+
+Feature: pmi_corpus
+MAP      : 24.2720
+# of TPs : 358
+Variance : 1.2196
+
+Feature: t_corpus
+MAP      : 26.3142
+# of TPs : 358
+Variance : 18.9194
+
+Feature: dice_corpus
+MAP      : 26.1481
+# of TPs : 358
+Variance : 23.3279
+
+Feature: ll_corpus
+MAP      : 26.2070
+# of TPs : 358
+Variance : 18.5153
+
