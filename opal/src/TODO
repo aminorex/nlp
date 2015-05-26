@@ -1,0 +1,18 @@
+* reduce space/memory footprint
+** implement TAIL
+*** how to manage space fragment?
+**** embed in a contiguous space in double array: check = 0
+**** embed in base
+
+** 1-byte char CHECK
+*** how to resolve collision effectively?
+
+
+* support binary key including null character
+
+* support variable-length value
+
+* speed up lookup
+** implement value for in the base of the leaf
+** return leaf ASAP
+

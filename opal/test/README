@@ -1,0 +1,19 @@
+This directory includes the data set used in the following paper:
+
+N. Yoshinaga and M. Kitsuregawa. Kernel Slicing: Scalable Online
+Training with Conjunctive Features.  Proc. COLING (oral). 2010.
+
+tl.train, tl.dev. tl.test:       training and development examples for DEP
+                                 (tl.dev and tl.test are not used in the paper)
+wiki.train, wiki.dev, wiki.test: training, development, and test examples for REL
+                                 originally included in:
+                                   http://nlpwww.nict.go.jp/hyponymy/
+
+You can test something like:
+> opal -t 0 -as -c 0.01 -i 20 tl.train m tl.dev
+> opal -t 1 -d 2 -N 4000 -p -as -c 0.0005 -i 20 tl.train m tl.dev
+> opal -t 1 -d 3 -N 125 -kp -as -c 0.00001 -i 20 tl.train m tl.dev
+> opal -t 0 -as -c 0.05 -i 20 wiki.train m wiki.dev
+> opal -t 1 -d 2 -N 8000 -p -as -c 0.005 -i 20 wiki.train m wiki.dev 
+> opal -t 1 -d 3 -N 125 -kp -as -c 0.0005 -i 20 wiki.train m wiki.dev
+

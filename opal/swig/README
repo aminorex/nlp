@@ -1,0 +1,59 @@
+# 1. prepare bindings for script languages
+
+> cd opal-YYYY-MM-DD
+> configure   # --enable-string-feature (to accept string features)
+> cd swig
+> make        # for a (faster) binary classifier
+                (for a multi-class classifier, type `make all-multi')
+
+
+> make clean  
+
+## if you have some troubles on SSE4.2 popcnt in the following installation,
+   you may want to configure --disable-popcnt to disable it
+
+
+# 2. build bindings for the language you need a binding
+
+## python
+> cd python
+> python setup.py build
+> sudo python setup.py install --record installed
+
+### test
+> python test.py -t 0 -as -i 20 -c 0.01 tl.train model tl.test
+
+### uninstal
+> cat installed | xargs rm -f
+
+===
+
+## ruby
+> cd ruby
+> ruby extconf.rb
+> make site-install
+
+### test
+> ruby test.rb -t 0 -as -i 20 -c 0.01 tl.train model tl.test
+
+===
+
+## perl
+> cd perl
+> perl Makefile.PL
+> make install
+
+### test
+> perl test.pl -t 0 -as -i 20 -c 0.01 tl.train model tl.test
+
+### uninstall
+> make uninstall
+
+## lua / luajit
+> cd lua
+> make lua-bindings
+ (make luajit-bindings)
+
+### test
+> lua    test.lua -t 0 -as -i 20 -c 0.01 tl.train model tl.test
+ (luajit test.lua -t 0 -as -i 20 -c 0.01 tl.train model tl.test)
