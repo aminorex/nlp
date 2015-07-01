@@ -10,7 +10,7 @@ def translate(text, to_language="auto", from_language="auto", tag=''):
     '''Return the translation using google translate'''
     agents = {'User-Agent':"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)"}
     before_trans = 'class="t0">'
-    link = "http://translate.google.com/m?hl=%s&sl=%s&q=%s" % (to_language, from_language, urllib.quote_plus(text))
+    link = "http://translate.google.com/m?hl=%s&sl=%s&q=%s" % (to_language, from_language, urllib.quote_plus(text.encode('utf-8')))
     if tag:
         sys.stderr.write(tag+':: '+link+"\n")
     request = urllib2.Request(link, headers=agents)
