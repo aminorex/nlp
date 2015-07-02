@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+for arg in $@; do
+  echo $arg | xxd -r -p | iconv -f utf-8 -t ucs-2 | xxd -p
+done
