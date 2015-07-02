@@ -1,4 +1,30 @@
 #! /usr/bin/env bash
-for arg in $@; do
-  echo $arg | xxd -r -p | iconv -f utf-8 -t ucs-2 | xxd -p
-done
+set +o pipefail
+
+convw() {
+  echo $@ | xxd -r -p | iconv -f utf-8 -t ucs-2 | dd bs=2 conv=swab 2>/dev/null | xxd -p
+  return $?
+}
+
+conv(){
+  out=""
+  for arg in $@; do
+    out="$out $(convw $arg)"
+  done
+  echo $out
+  test ! -z $out
+  return $?
+}
+
+if [ -z "$@" ]; then
+  rv=0
+  while read line; do
+    conv $line
+    rv=$((rv + $?))
+  done
+else 
+  conv $@
+  rv=$?  
+fi
+
+exit $rv
