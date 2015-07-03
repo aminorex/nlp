@@ -2228,15 +2228,10 @@ special sequences:
         oc = ord(ch)
         if  ch > 'z' and oc not in H_CP_S:
             kstr += rstr[pos]
-            if verbose:
-                sys.stderr.write('r2j,{0:d}:{1:s} hi\n'.format(pos,rstr[pos]))
             pos += 1
             continue
-
         if (ch < 'a' and ch > 'Z') or (ch < 'A' and oc not in L_CP_S):
             kstr += rstr[pos]
-            if verbose:
-                sys.stderr.write('r2j,{0:d}:{1:s} hi\n'.format(pos,rstr[pos]))
             pos += 1
             continue
         pair = None
@@ -2244,9 +2239,6 @@ special sequences:
         while rlen > 0 and pair is None:
             pair = ROMAJI_TAB.get(rstr[pos:pos+rlen])
             rlen -= 1
-        if verbose:
-            sys.stderr.write('r2j,pos={0:d},key={1:s},p={2:b}.max={3:d}\n'
-                             .format(pos,rstr[pos:pos+rlen+1],pair is not None,ROMAJI_MAX_KEY))
         kstr += rstr[pos] if pair is None else pair[cset]
     return kstr
  
@@ -2296,7 +2288,7 @@ def filtered(str,src,trg,qual=0,verbosity=0):
                 src = ROMAJI
 
         if src == ROMAJI:
-            curr = token.isalpha()
+            curr = token.isalpha() and all(map(lambda x: x == ROMAJI,csets))
             if curr:
                 if prev and (trg == KATAKANA or trg == HANBUN):
                     outs[-1] += MDOT + r2j(token,trg,verbosity)
@@ -2320,8 +2312,10 @@ def filtered(str,src,trg,qual=0,verbosity=0):
                 outs.append(j2r(token,KATAKANA,HIRAGANA,verbosity))
 
         if verbosity:
-            sys.stderr.write("token '{0:s}' out '{1:s}' {2:b} {3:b}\n"
-                             .format(token,outs[-1],curr,prev).encode('utf-8'))
+            sys.stderr.write(u"token '"+token)
+            sys.stderr.write(u"' out '"+outs[-1]+"'")
+            sys.stderr.write(u" "+(u"T" if curr else u"F"))
+            sys.stderr.write(u" "+(u"T" if prev else u"F")+"\n")
         prev = curr
     if verbosity:
         sys.stderr.write("filtered: "+(" ".join(outs))+"\n");
@@ -2353,7 +2347,7 @@ if __name__ == "__main__":
                 src = WIDE # full-width
             elif arg[2] == 'n':
                 src = ROMAJI # narrow
-            elif src[2] == 'l':
+            elif arg[2] == 'l':
                 src = LATIN # any latin
             else:
                 usage()
