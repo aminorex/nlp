@@ -1,7 +1,10 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+# XXX this script is incomplete, but does something useful anyhow.
+# will finish later if the occasion arises
+#
 import sys
-import jctconv
+from jctconv import h2z, z2h
 
 ROMAJI_TAB = {
     u" " : ( u"・", u"・" ) ,
@@ -2126,6 +2129,9 @@ MDOT = u'\u30FB'
 HIRAGANA_TAB = {}
 HIRAGANA_MAX_KEY = 0
 
+KATAKANA_TAB = {}
+KATAKANA_MAX_KEY = 0
+
 def init_hiragana():
     if HIRAGANA_MAX_KEY:
         return
@@ -2133,6 +2139,8 @@ def init_hiragana():
         k = p[HIRAGANA]
         HIRAGANA_MAX_KEY = max(HIRAGANA_MAX_KEY,len(k))
         HIRAGANA_TAB[k] = r 
+        HIRAGANA_TAB[p[KATAKANA]] = k
+        HIRAGANA_MAX_KEY = max(HIRAGANA_MAX_KEY,len(p[KATAKANA]))
     return
 
 def init_katakana():
@@ -2142,21 +2150,62 @@ def init_katakana():
         k = p[KATAKANA]
         KATAKANA_MAX_KEY = max(KATAKANA_MAX_KEY,len(k))
         KATAKANA_TAB[k] = r
+        KATAKANA_TAB[p[HIRAGANA]] = k
+        KATAKANA_MAX_KEY = max(KATAKANA_MAX_KEY,len(p[HIRAGANA]))
     return
-
-KATAKANA_TAB = {}
-KATAKANA_MAX_KEY = 0
 
 HIRAGANA=0
 KATAKANA=1
 ROMAJI=2
 WIDE=3
 HANBUN=4
-KANA=5
+NINIGANA=5
+LATIN=6
+LPUNC=7
+IPUNC=8
+WPUNC=9
+MISC=10
+ANY=11
 
-FILTER_NONE = 0
-FILTER_MATCHING = 1
-FILTER_CSET = 2
+PASS_ALL = 0
+PASS_SRC = 1
+PASS_TRG = 2
+
+def csetof(uint):
+    if uint > 0x1000:
+        if uint > 0xFA6A:
+            if uint >= 0xFF01 and uint <= 0xFF5E:
+                return WIDE
+            if uint >= 0xFF5f and uint <= 0xFF9F:
+                return HANBUN
+        elif uint > 0x3100:
+            if uint >= 0x3400 and uint <= 0x4DB5:
+                return HAN
+            if uint >= 0x4E00 and uint <= 0x9FCB:
+                return HAN
+            if uint >= 0xF900 and uint <= 0xFA6A:
+                return HAN
+        else:
+            if uint >= 0x3041 and uint <= 0x3096:
+                return HIRAGANA
+            if uint >= 0x30A0 and uint <= 0x30FF:
+                return KATAKANA
+    else:
+        if uint >= 0x0041 and uint <= 0x005A:
+            return ROMAJI
+        if uint >= 0x0061 and uint <= 0x007A:
+            return ROMAJI
+        if uint in H_CP_S:
+            return ROMAJI
+    return MISC
+    
+def csetsof(str):
+    csets = set()
+    for ch in str:
+        csets.add(csetof(ord(ch)))
+    slist = list(csets)
+    slist.sort()
+    return slist
 
 def r2j(str,cset=KATAKANA,verbose=False):
     """
@@ -2200,54 +2249,75 @@ special sequences:
         kstr += rstr[pos] if pair is None else pair[cset]
     return kstr
  
-def r2k(str,verbose):
-    return r2j(str,KATAKANA,verbose)
-
-def r2h(str,verbose):
-    return r2j(str,HIRAGANA,verbose)
-
-def j2r(str,inset=HIRAGANA,outset=ROMAJI):
-    if not HIRAGANA_TAB and cset != KATAKANA:
+def j2r(str,src=NINIGANA,trg=ROMAJI):
+    if not HIRAGANA_TAB and src != KATAKANA:
         init_hiragana()
-    if not KATAKANA_TAB and cset != HIRAGANA:
+    if not KATAKANA_TAB and src != HIRAGANA:
         init_katakana()
-    # XXX TODO
-    jstr = str
-    return jstr
+    rstr = u""
+    for pos in xrange(0,len(str)):
+        ch = str[pos]
+        oc = ord(ch)
+        cs = csetof(oc)
+        if src == cs or (src == NINIGANA and (cs == HIRAGANA or cs == KATAKANA)):
+            tab = HIRAGANA_TAB if cs == HIRAGANA else KATAKANA_TAB
+            max_key = HIRAGANA_MAX_KEY if cs == HIRAGANA else KATAKANA_MAX_KEY
+        else:
+            rstr += str[pos]
+            continue
+        pair = None
+        klen = min(len(str)-pos,max_key)
+        while klen > 0 and pair is None:
+            pair = ROMAJI_TAB.get(str[pos:pos+klen])
+            klen -= 1
+        if verbose:
+            sys.stderr.write('j2r,pos={0:d},key={1:s},p={2:b}.max={3:d}\n'
+                             .format(pos,str[pos:pos+klen+1],pair is not None,max_key))
+        rstr += str[pos] if pair is None else pair[src]
+    return rstr if trg == ROMAJI else h2z(rstr,kana=true,digit=true,ascii=true)
 
-def k2r(str):
-    return j2r(str,inset=KATAKANA)
-
-def h2r(str):
-    return j2r(str,inset=HIRAGANA)
-
-def k2w(str):
-    return j2r(str,inset=KATAKANA,outset=WIDE)
-
-def h2w(str):
-    return j2r(str,inset=HIRAGANA,outset=WIDE)
-
-def r2w(str):
-    return j2r(str,inset=ROMAJI,outset=WIDE)
-
-def w2r(str):    
-    return j2r(str,inset=WIDE,outset=ROMAJI)
-
-def filtered(str,cset,filtration=0,verbosity=0):
+def filtered(str,src,trg,qual=0,verbosity=0):
     str.replace(u"\u3000"," ")
     outs = []
     # use filtration XXX TODO
     # the case currently implemented is romaji to katakana
     prev = False
+    curr = False
     for token in str.split():
-        curr = token.isalpha() and all(map(lambda x:ord(x)<128,token))
-        if curr:
-            if prev:
-                outs[-1] += MDOT + r2k(token,verbosity)
+        csets = csetsof(token)
+
+        if src == WIDE or src == LATIN:
+            curr = all(map(lambda x: x == WIDE or x == LATIN,csets))
+            if curr:
+                token = z2h(token,kana=False,digit=True,ascii=True)
+                src = ROMAJI
+            elif src == LATIN:
+                src = ROMAJI
+
+        if src == ROMAJI:
+            curr = token.isalpha()
+            if curr:
+                if prev and (trg == KATAKANA or trg == HANBUN):
+                    outs[-1] += MDOT + r2j(token,trg,verbosity)
+                else:
+                    outs.append(r2j(token,trg,verbosity))
             else:
-                outs.append(r2k(token,verbosity))
-        else:
-            outs.append(token)
+                outs.append(token)
+
+        if not curr:
+            if trg == ROMAJI or trg == WIDE or trg == LATIN:
+                if src == KATAKANA or src == NINIGANA:
+                    token = j2r(token,KATAKANA,ROMAJI,verbosity)
+                if src == HIRAGANA or src == NINIGANA:
+                    token = j2r(token,HIRAGANA,ROMAJI,verbosity)
+                if trg == WIDE:
+                    token = h2z(token,kana=False,digit=False,ascii=True)
+                outs.append(token)
+            elif trg == KATAKANA and (src == HIRAGANA or src == NINIGANA):
+                outs.append(j2r(token,HIRAGANA,KATAKANA,verbosity))
+            elif trg == HIRAGANA and (src == KATAGANA or src == NINIGANA):
+                outs.append(j2r(token,KATAKANA,HIRAGANA,verbosity))
+
         if verbosity:
             sys.stderr.write("token '{0:s}' out '{1:s}' {2:b} {3:b}\n"
                              .format(token,outs[-1],curr,prev).encode('utf-8'))
@@ -2256,28 +2326,58 @@ def filtered(str,cset,filtration=0,verbosity=0):
         sys.stderr.write("filtered: "+(" ".join(outs))+"\n");
     return " ".join(outs)
 
+def usage():
+    sys.stderr.write("Usage: romaji [-[fs][hkawnl]] [-t[hkawnl]] [-m[fst]] IN* [OUT]\n")
+    sys.exit(1)
+
 if __name__ == "__main__":
     from codecs import open
 
     inpaths=[]
     outpath=""
-    cset=KATAKANA
-    filtering=0
+    src=LATIN
+    trg=KATAKANA
+    qual=PASS_ALL
     verbose=0
     nonblank=False
     for arg in sys.argv[1:]:
-        if arg == '-h':
-            cset=HIRAGANA
-        elif arg == '-k':
-            cset=KATAKANA
-        elif arg == '-r':
-            cset=ROMAJI
-        elif arg == '-w':
-            cset=WIDE
-        elif arg == '-f':
-            filtering=1
-        elif arg == '-F':
-            filtering=2
+        if arg[:2] == '-f' or arg[:2] == '-s':
+            if arg[2] == 'k':
+                src = KATAKANA
+            elif arg[2] == 'h':
+                src = HIRAGANA
+            elif arg[2] == 'a':
+                src = NINIGANA # any kana
+            elif arg[2] == 'w':
+                src = WIDE # full-width
+            elif arg[2] == 'n':
+                src = ROMAJI # narrow
+            elif src[2] == 'l':
+                src = LATIN # any latin
+            else:
+                usage()
+        elif arg[:2] == '-t':
+            if arg[2] == 'k':
+                trg = KATAKANA
+            elif arg[2] == 'h':
+                trg = HIRAGANA
+            elif arg[2] == 'a':
+                trg = NINIGANA
+            elif arg[2] == 'w':
+                trg = WIDE
+            elif arg[2] == 'n':
+                trg = ROMAJI
+            elif trg[2] == 'l':
+                trg = LATIN
+            else:
+                usage()
+        elif arg[:2] == '-m':
+            if arg[2] == 's' or arg[2] == 'f':
+                qual=PASS_SRC
+            elif arg[2] == 't':
+                qual=PASS_TRG
+            else:
+                usage()
         elif arg == '-n':
             nonblank=True
         elif arg == '-v':
@@ -2285,19 +2385,11 @@ if __name__ == "__main__":
         elif arg == '-': 
             inpaths.append("/dev/stdin")
         elif arg[0] == '-': 
-            sys.stderr.write("Usage: {0:s}} [-h|-k|-r|-w|] [-f|-F|] IN [IN2* OUT]\n"
-                             .format(sys.argv[0]))
-            sys.exit(1)
+            usage()
         elif os.access(arg,os.R_OK): 
             inpaths.append(arg)
-        elif not inpaths:
-            sys.stderr.write("{0:s} Unable to read from path {1:s}\n"
-                             .format(sys.argv[0],arg))
-            sys.exit(1)
         elif outpath:
-            sys.stderr.write("{0:s}: Multiple outputs specified {1:s}, {2:s}\n"
-                             .format(sys.argv[0],outpath,arg))
-            sys.exit(1)
+            usage()
         else:
             outpath = arg
     
@@ -2321,7 +2413,7 @@ if __name__ == "__main__":
                 line = line.strip()
                 if verbose:
                     sys.stderr.write("filtering: "+line+"\n")
-                text = filtered(line,cset,filtering,verbose)
+                text = filtered(line,src,trg,qual,verbose)
                 if nonblank or text:
                     outf.write(text+u"\n")
                     nout += 1
