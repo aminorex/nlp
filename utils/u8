@@ -2,7 +2,8 @@
 set +o pipefail
 
 convw() {
-  echo $@ | xxd -r -p | dd bs=2 conv=swab 2>/dev/null | iconv -f ucs-2 -t utf-8 | xxd -p
+  echo $@ | sed -e 's,\\u,,g' | xxd -r -p | dd bs=2 conv=swab 2>/dev/null | \
+    iconv -f ucs-2 -t utf-8 | xxd -p
   return $?
 }
 
@@ -16,18 +17,37 @@ conv(){
   return $?
 }
 
-if [ -z "$@" ]; then
+sedfmt=false
+args=""
+for arg in $@; do
+  case $arg in
+  -e)
+    sedfmt=true
+    ;;
+  *)
+    args="$args $arg"
+    ;;
+  esac
+done
+
+if [ -z "$args" ]; then
   rv=0
   while read line; do
-    conv $line
+    if $sedfmt; then
+      conv $line | sed -e 's,\([a-f0-9][a-f0-9]\),\\x\1,g'
+    else
+      conv $line
+    fi
     rv=$((rv + $?))
   done
 else 
-  conv $@
+  if $sedfmt; then
+    eval "conv $args | sed -e 's,\([a-f0-9][a-f0-9]\),\\\\x\1,g'"
+  else
+    eval "conv $args"
+  fi
   rv=$?  
 fi
 
 exit $rv
-for arg in $@; do
 
-done
