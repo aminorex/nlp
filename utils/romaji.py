@@ -2242,7 +2242,7 @@ special sequences:
         kstr += rstr[pos] if pair is None else pair[cset]
     return kstr
  
-def j2r(str,src=NINIGANA,trg=ROMAJI):
+def j2r(str,src=NINIGANA,trg=ROMAJI,verbosity=0):
     if not HIRAGANA_TAB and src != KATAKANA:
         init_hiragana()
     if not KATAKANA_TAB and src != HIRAGANA:
