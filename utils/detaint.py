@@ -62,11 +62,17 @@ def main(args):
     source_paths = []
     clean_path = None
     dirty_path = None
-
+    dump = False
+    dump_only = False
     quiet = False
+
     for arg in args:
         if arg == '-n':
             clean_path = None
+        elif arg == '-d':
+            if dump:
+                dump_only = True
+            dump = True
         elif arg == '-b1':
             bitext = 1
         elif arg == '-b2':
@@ -93,6 +99,13 @@ def main(args):
         source_paths.append('/dev/stdin')
 
     taint_set = packed_set(taint_path)
+    if dump:
+        with open('/dev/stderr','a',encoding='utf-8') as err:
+            for t in taint_set:
+                err.write(t+"\n")
+            err.write('# ' + repr(len(taint_set)) + " taint lines\n");
+        if dump_only:
+            sys.exit(0)
 
     cleanf = None
     dirtyf = None
