@@ -1,0 +1,36 @@
+#! /usr/bin/env bash
+set +o pipefail
+
+NLP_UTILS=${NLP_UTILS:-$HOME/u/am/nlp/utils}
+NA_TOOL=${NA_TOOL:-/usr/local}
+
+export PATH=${NLP_UTILS}:${NA_TOOL}/bin:$PATH
+
+PCJAR=$(ls -t ${NLP_UTILS}/../pennconverter/pennconverter*.jar|head -1)
+if [ ! -f "$PCJAR" ]; then
+  if [ -d "$NA_TOOL/share/java" ]; then
+    if [ -f "$NA_TOOL/share/java/pennconverter.jar" ]; then
+      PCJAR="$NA_TOOL/share/java/pennconverter.jar"
+    fi
+  fi
+fi
+if [ ! -f "$PCJAR" ]; then
+  echo $0: Error: Unable to locate pennconverter.jar
+  exit 1
+fi
+
+upconvert=cat
+args=""
+for arg in $@; do
+  case $arg in
+  -u) 
+    upconvert=${NLP_UTILS}/uptree.py
+    ;;
+  *)
+    args="$args $arg"
+    ;;
+  esac
+done
+
+java=$(type -p java)
+exec sh -c "$upconvert | $java -jar ${PCJAR} $args"
