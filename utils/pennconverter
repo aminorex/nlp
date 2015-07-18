@@ -1,4 +1,11 @@
 #! /usr/bin/env bash
+
+#
+# script to drive pennconverter
+# options -u and -raw are of particular interest
+# for others see the LTH.SE web site
+#
+
 set +o pipefail
 
 NLP_UTILS=${NLP_UTILS:-$HOME/u/am/nlp/utils}

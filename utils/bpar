@@ -1,0 +1,46 @@
+#! /usr/bin/env bash
+set +o pipefail
+
+NA_TOOL=${NA_TOOL:-/usr/local}
+export PATH=${NA_TOOL}/bin:$PATH
+BPDIR=${NA_TOOL}/share/java/BerkeleyParser
+BPJAR=${BPJAR:-${BPDIR}/BerkeleyParser-1.7.jar}
+if [ ! -f "$BPJAR" ]; then
+  echo $0: Error: Unable to locate BerkeleyParser-1.7.jar
+  exit 1
+fi
+
+$args=''
+
+for arg in $@; do
+  if [ ! -f $arg ]; then
+  case $arg in
+  ar*)
+    GRAMMAR=$BPDIR/arb_sm5.gr
+    ;;
+  [zc][ht]*)
+    GRAMMAR=$BPDIR/chn_sm5.gr
+    ;;
+  en*)
+    GRAMMAR=$BPDIR/eng_sm6.gr    
+    ;;
+  fr*)
+    GRAMMAR=$BPDIR/fra_sm5.gr    
+    ;;
+  [dg]e*)
+    GRAMMAR=$BPDIR/ger_sm5.gr    
+    ;;
+  *)
+    echo $0: Unknown grammar argument $arg ignored! 1>&2
+    ;;
+  esac
+  else
+    args="$args $arg"
+  fi
+done
+
+if [ -z "$GRAMMAR" ]; then
+  GRAMMAR=$BPDIR/eng_sm6.gr
+fi
+java=$(type -p java)
+exec sh -c "$java -jar ${BPJAR} -gr ${GRAMMAR} $args"
