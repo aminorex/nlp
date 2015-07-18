@@ -14,7 +14,7 @@ NA_TOOL=${NA_TOOL:-/usr/local}
 export PATH=${NLP_UTILS}:${NA_TOOL}/bin:$PATH
 
 PCJAR=$(ls -t ${NLP_UTILS}/../pennconverter/pennconverter*.jar|head -1)
-if [ ! -f "$PCJAR" ]; then
+if [ -z "${PCJAR}" -o ! -f "$PCJAR" ]; then
   if [ -d "$NA_TOOL/share/java" ]; then
     if [ -f "$NA_TOOL/share/java/pennconverter.jar" ]; then
       PCJAR="$NA_TOOL/share/java/pennconverter.jar"
@@ -31,7 +31,11 @@ args=""
 for arg in $@; do
   case $arg in
   -u) 
-    upconvert=${NLP_UTILS}/uptree.py
+    if [ -f ${NA_TOOL}/bin/uptree.py ]; then
+      upconvert=${NA_TOOL}/uptree.py
+    else
+      upconvert=${NLP_UTILS}/uptree.py
+    fi
     ;;
   *)
     args="$args $arg"
